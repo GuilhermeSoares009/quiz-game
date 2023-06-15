@@ -24,6 +24,13 @@ export default {
       correctAnswers: undefined
     }
   },
+  computed: {
+    answers() {
+      var answers = JSON.parse(JSON.stringify(this.incorrectAnswers));
+      answers.splice(Math.round(Math.random() * answers.length), 0, this.correctAnswers);
+      return answers;
+    }
+  },
   created() {
     this
     .axios
