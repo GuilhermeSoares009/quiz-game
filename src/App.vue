@@ -1,14 +1,20 @@
 <template>
   <div>
-    <h1 v-html="this.question"></h1>
 
-    <input type="radio" name="options" id="True">
-    <label>True</label>
+    <template v-if="this.question">
+      <h1 v-html="this.question"></h1>
 
-    <input type="radio" name="options" id="False">
-    <label>Falso</label>
+      <template v-for="(answer,index) in this.answers" v-bind:key="index">
+        <input 
+        type="radio" 
+        name="options" 
+        value="answer"> 
+        <label v-html="answer"></label>
+      </template>
 
-    <button class="send" type="button"> Send </button>
+      <button class="send" type="button"> Send </button>
+    </template>
+
 
   </div>
 </template>
@@ -21,26 +27,26 @@ export default {
     return {
       question: undefined,
       incorrectAnswers: undefined,
-      correctAnswers: undefined
+      correctAnswer: undefined
     }
   },
   computed: {
     answers() {
       var answers = JSON.parse(JSON.stringify(this.incorrectAnswers));
-      answers.splice(Math.round(Math.random() * answers.length), 0, this.correctAnswers);
+      answers.splice(Math.round(Math.random() * answers.length), 0, this.correctAnswer);
       return answers;
     }
   },
   created() {
     this
-    .axios
-    .get("https://opentdb.com/api.php?amount=1&category=31")
-    .then((response) => {
-      console.log(response)
-      this.question = response.data.results[0].question;
-      this.incorrectAnswers = response.data.results[0].incorrect_answers;
-      this.correctAnswers = response.data.results[0].correct_answers;
-    })
+      .axios
+      .get("https://opentdb.com/api.php?amount=1&category=31")
+      .then((response) => {
+        console.log(response)
+        this.question = response.data.results[0].question;
+        this.incorrectAnswers = response.data.results[0].incorrect_answers;
+        this.correctAnswer = response.data.results[0].correct_answer;
+      })
   }
 } 
 </script>
