@@ -4,16 +4,22 @@
     <template v-if="this.question">
       <h1 v-html="this.question"></h1>
 
-      <template v-for="(answer,index) in this.answers" v-bind:key="index">
-        <input 
-        type="radio" 
-        name="options" 
-        :value="answer"
-        v-model="this.chosenAnswer"> 
+      <template v-for="(answer, index) in this.answers" v-bind:key="index">
+        <input :disabled="this.answerSubmitted" type="radio" name="options" :value="answer" v-model="this.chosenAnswer">
         <label v-html="answer"></label>
       </template>
 
-      <button @click="this.submitAnswer()" class="send" type="button"> Send </button>
+      <button @click="!this.submitAnswer()" class="send" type="button"> Send </button>
+
+      <section class="result" v-if="this.answerSubmitted">
+        <template v-if="this.chosenAnswer == this.correctAnswer">
+          <h4>&#9989; Parabéns, a resposta "{{ this.correctAnswer }}" está correta.</h4>
+        </template>
+        <template v-else>
+          <h4>&#10060; Que pena, a resposta está errada. A resposta correta é "{{ this.correctAnswer }}".</h4>
+        </template>
+        <button @click="this.getNewQuestion()" class="send" type="button">Próxima pergunta</button>
+      </section>
     </template>
 
 
@@ -29,7 +35,8 @@ export default {
       question: undefined,
       incorrectAnswers: undefined,
       correctAnswer: undefined,
-      chosenAnswer: undefined
+      chosenAnswer: undefined,
+      answerSubmitted: false
     }
   },
   computed: {
@@ -41,15 +48,16 @@ export default {
   },
   methods: {
     submitAnswer() {
-      var msg
-      if (!this.chosenAnswer){
-        alert('Pick one of the options');
-      } else{
-        msg = this.chosenAnswer == this.correctAnswer ? 'You got it right!': 'You got it wrong!';
-        alert(msg);
+      var msg;
+      if (!this.chosenAnswer) {
+        console.log('Pick one of the options');
+      } else {
+        this.answerSubmitted = true;
+        msg = this.chosenAnswer == this.correctAnswer ? 'You got it right!' : 'You got it wrong!';
+        console.log(msg);
       }
     }
-  }, 
+  },
   created() {
     this
       .axios
