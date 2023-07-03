@@ -8,11 +8,12 @@
         <input 
         type="radio" 
         name="options" 
-        value="answer"> 
+        :value="answer"
+        v-model="this.chosenAnswer"> 
         <label v-html="answer"></label>
       </template>
 
-      <button class="send" type="button"> Send </button>
+      <button @click="this.submitAnswer()" class="send" type="button"> Send </button>
     </template>
 
 
@@ -27,7 +28,8 @@ export default {
     return {
       question: undefined,
       incorrectAnswers: undefined,
-      correctAnswer: undefined
+      correctAnswer: undefined,
+      chosenAnswer: undefined
     }
   },
   computed: {
@@ -37,6 +39,17 @@ export default {
       return answers;
     }
   },
+  methods: {
+    submitAnswer() {
+      var msg
+      if (!this.chosenAnswer){
+        alert('Pick one of the options');
+      } else{
+        msg = this.chosenAnswer == this.correctAnswer ? 'You got it right!': 'You got it wrong!';
+        alert(msg);
+      }
+    }
+  }, 
   created() {
     this
       .axios
