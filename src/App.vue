@@ -13,10 +13,10 @@
 
       <section class="result" v-if="this.answerSubmitted">
         <template v-if="this.chosenAnswer == this.correctAnswer">
-          <h4>&#9989; Parabéns, a resposta "{{ this.correctAnswer }}" está correta.</h4>
+          <h4 v-html="'&#9989; Parabéns, a resposta' + this.correctAnswer + ' está correta.'"></h4>
         </template>
         <template v-else>
-          <h4>&#10060; Que pena, a resposta está errada. A resposta correta é "{{ this.correctAnswer }}".</h4>
+          <h4 v-html="'&#10060; Que pena, a resposta está errada. A resposta correta é ' + this.correctAnswer + '.'"></h4>
         </template>
         <button @click="this.getNewQuestion()" class="send" type="button">Próxima pergunta</button>
       </section>
@@ -56,10 +56,14 @@ export default {
         msg = this.chosenAnswer == this.correctAnswer ? 'You got it right!' : 'You got it wrong!';
         console.log(msg);
       }
-    }
-  },
-  created() {
-    this
+    },
+    getNewQuestion() {
+
+      this.answerSubmitted = true;
+      this.chosenAnswer = true;
+      this.question = true;
+
+      this
       .axios
       .get("https://opentdb.com/api.php?amount=1&category=31")
       .then((response) => {
@@ -68,6 +72,10 @@ export default {
         this.incorrectAnswers = response.data.results[0].incorrect_answers;
         this.correctAnswer = response.data.results[0].correct_answer;
       })
+    }
+  },
+  created() {
+    this.getNewQuestion();
   }
 } 
 </script>
